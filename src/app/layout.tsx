@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import Nav from "@/components/Navbar";
+import { ToastContainer } from "react-toastify";
 
 const poppins = Poppins({
   weight: ["100", "200", "300", "400"],
@@ -11,7 +11,6 @@ export const metadata: Metadata = {
   title: "Frugal",
   description: "An app designed to make budgeting easy",
 };
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -19,8 +18,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${poppins.className} antialiased`}>
-        <Nav />
+      <body className={`${poppins.className} antialiased bg-zinc-100 `}>
+        <ToastContainer position="top-right" autoClose={3000} />
         {children}
       </body>
     </html>
