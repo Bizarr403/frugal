@@ -29,5 +29,7 @@ export async function GET(req: NextRequest, {params}:{params:{userID:string}}) {
  export async function DELETE(){
   try{
     
-  }catch(err){}
+  }catch(err){
+    console.log(err)
+  }
  }

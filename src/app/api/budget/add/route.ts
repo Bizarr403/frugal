@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { BudgetItem } from "@/type";
 
 const prisma = new PrismaClient();
 
@@ -18,7 +19,7 @@ export async function POST(req: NextRequest) {
               kindeId: userId, // or use `id` or `email` if you store those instead
             },
           },budgetItems: {
-            create: b.budgetItems.map((item: any) => ({
+            create: b.budgetItems.map((item: BudgetItem) => ({
               name: item.name,
               color: item.color,
               amount: item.amount,

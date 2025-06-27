@@ -3,10 +3,8 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Globe2, ChartLine, Percent } from "lucide-react";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
