@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  kindeId   String   @unique
+  email     String?  @unique
+  firstName String
+  lastName  String
+  budgets   Budget[] // User has many monthly budgets
+}
+
+model Budget {
+  id          String       @id @default(cuid())
+  month       String // "YYYY-MM"
+  total       Float
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  budgetItems BudgetItem[] // One-to-many relationship
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model BudgetItem {
+  id        String   @id @default(cuid())
+  name      String
+  color     String // Hex
+  amount    Float
+  budget    Budget   @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  budgetId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
