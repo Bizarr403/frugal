@@ -22,7 +22,7 @@ import {
 } from "@/components/Charts/ChartBarrel";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { LucideTrash2, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import axios from "axios";
 import Link from "next/link";
 const chartConfig = {
