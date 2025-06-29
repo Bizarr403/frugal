@@ -12,3 +12,9 @@ export type BudgetItem = {
     budgetItems: BudgetItem[];
   };
   
+  export type entry = {
+    month:string,
+    total:number,
+    [key: string]: string | number;
+  }
+  

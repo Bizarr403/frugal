@@ -25,7 +25,7 @@ import { toast } from "react-toastify";
 import { Trash2 } from "lucide-react";
 import axios from "axios";
 import Link from "next/link";
-import { BudgetItem, BudgetMonth } from "@/type";
+import { BudgetItem, BudgetMonth, entry } from "@/type";
 const chartConfig = {
   total: { label: "Total", color: "black" },
   needs: { label: "Needs", color: "#60a5fa" },
@@ -91,12 +91,13 @@ export function MainChart({ userID }: { userID: string | undefined }) {
       year: "2-digit",
     });
 
-    const entry: any = {
+    const entry: entry = {
       month: monthName,
-      Total: monthBudget.total,
+      total: monthBudget.total,
     };
 
-    monthBudget.budgetItems.forEach((cat) => {
+    const key = "total";
+    monthBudget.budgetItems.forEach((cat: BudgetItem) => {
       entry[cat.name] = cat.amount;
     });
 
