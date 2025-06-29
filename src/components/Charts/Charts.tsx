@@ -25,6 +25,7 @@ import { toast } from "react-toastify";
 import { Trash2 } from "lucide-react";
 import axios from "axios";
 import Link from "next/link";
+import { BudgetItem, BudgetMonth } from "@/type";
 const chartConfig = {
   total: { label: "Total", color: "black" },
   needs: { label: "Needs", color: "#60a5fa" },
@@ -370,8 +371,8 @@ export function MainChart({ userID }: { userID: string | undefined }) {
                         ],
                       },
                     ]);
-                  } catch (error: any) {
-                    toast.error(error.message || "Failed to save budget!");
+                  } catch (error: unknown) {
+                    toast.error("Failed to save budget!");
                     console.error("Failed to add budgets", error);
                   }
                 }}
@@ -425,7 +426,7 @@ export function MainChart({ userID }: { userID: string | undefined }) {
 }
 
 export function FilteredCharts({ userID }: { userID: string | undefined }) {
-  const [budgets, setBudgets] = useState<any[]>([]);
+  const [budgets, setBudgets] = useState<BudgetMonth[]>([]);
 
   useEffect(() => {
     if (!userID) return;
@@ -464,7 +465,7 @@ export function FilteredCharts({ userID }: { userID: string | undefined }) {
 
         const chartData = [
           budget.budgetItems.reduce(
-            (acc: any, item: any) => {
+            (acc: any, item: BudgetItem) => {
               acc[item.name] = item.amount;
               return acc;
             },
@@ -473,7 +474,7 @@ export function FilteredCharts({ userID }: { userID: string | undefined }) {
         ];
 
         const chartConfig = budget.budgetItems.reduce(
-          (config: any, item: any) => {
+          (config: ChartConfig, item: BudgetItem) => {
             config[item.name] = { label: item.name, color: item.color };
             return config;
           },
@@ -511,7 +512,7 @@ export function FilteredCharts({ userID }: { userID: string | undefined }) {
                 <YAxis />
                 <ChartTooltip content={<ChartTooltipContent />} />
                 <Legend />
-                {budget.budgetItems.map((cat: any, i: number) => (
+                {budget.budgetItems.map((cat: BudgetItem, i: number) => (
                   <Bar
                     key={i}
                     dataKey={cat.name}
