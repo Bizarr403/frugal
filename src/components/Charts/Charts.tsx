@@ -96,7 +96,6 @@ export function MainChart({ userID }: { userID: string | undefined }) {
       total: monthBudget.total,
     };
 
-    const key = "total";
     monthBudget.budgetItems.forEach((cat: BudgetItem) => {
       entry[cat.name] = cat.amount;
     });
@@ -341,7 +340,7 @@ export function MainChart({ userID }: { userID: string | undefined }) {
                             {
                               name: "Savings",
                               amount: difference,
-                              color: "#00FF00", // bright green
+                              color: "#00FF66",
                             },
                           ],
                         };
