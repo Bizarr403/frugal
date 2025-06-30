@@ -1,9 +1,10 @@
+import { RouteContext } from "@/type";
 import { PrismaClient} from "@prisma/client"; // update with your prisma location
 import { NextResponse, NextRequest } from "next/server";
 const prisma = new PrismaClient()
 
 export async function DELETE(
-  req: NextRequest, context: any) {
+  req: NextRequest, context:RouteContext) {
     const budgetID = context.params.budgetID  
   try {
     const deleted = await prisma.budget.delete({
