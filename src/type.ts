@@ -17,4 +17,10 @@ export type BudgetItem = {
     total:number,
     [key: string]: string | number;
   }
+
+  export type ChartDataEntry = {
+    month: string;
+    Total: number;
+    [key: string]: string | number;
+  };
   

@@ -25,7 +25,7 @@ import { toast } from "react-toastify";
 import { Trash2 } from "lucide-react";
 import axios from "axios";
 import Link from "next/link";
-import { BudgetItem, BudgetMonth, entry } from "@/type";
+import { BudgetItem, BudgetMonth, ChartDataEntry, entry } from "@/type";
 const chartConfig = {
   total: { label: "Total", color: "black" },
   needs: { label: "Needs", color: "#60a5fa" },
@@ -464,8 +464,8 @@ export function FilteredCharts({ userID }: { userID: string | undefined }) {
         });
 
         const chartData = [
-          budget.budgetItems.reduce(
-            (acc: any, item: BudgetItem) => {
+          budget.budgetItems.reduce<ChartDataEntry>(
+            (acc, item: BudgetItem) => {
               acc[item.name] = item.amount;
               return acc;
             },
