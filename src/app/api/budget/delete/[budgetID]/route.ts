@@ -14,7 +14,7 @@ export async function DELETE(
     });
 
     return NextResponse.json({ success: true, deleted });
-  } catch (err) {
+  } catch (err:unknown) {
     console.error("Failed to delete budget:", err);
     return new NextResponse("Failed to delete budget", { status: 500 });
   }
