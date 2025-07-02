@@ -22,7 +22,7 @@ import {
 } from "@/components/Charts/ChartBarrel";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { Trash2 } from "lucide-react";
+import { Trash2, Loader2 } from "lucide-react";
 import axios from "axios";
 import Link from "next/link";
 import { BudgetItem, BudgetMonth, ChartDataEntry, entry } from "@/type";
@@ -427,7 +427,7 @@ export function MainChart({ userID }: { userID: string | undefined }) {
 
 export function FilteredCharts({ userID }: { userID: string | undefined }) {
   const [budgets, setBudgets] = useState<BudgetMonth[]>([]);
-
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   useEffect(() => {
     if (!userID) return;
 
@@ -435,6 +435,7 @@ export function FilteredCharts({ userID }: { userID: string | undefined }) {
       try {
         const res = await axios.get(`/api/budget/filter/${userID}`);
         setBudgets(res.data);
+        setIsLoading(false);
       } catch (error) {
         console.error("Failed to fetch budgets", error);
       }
@@ -442,6 +443,16 @@ export function FilteredCharts({ userID }: { userID: string | undefined }) {
 
     fetchBudgets();
   }, [userID]);
+
+  if (isLoading)
+    return (
+      <div className="w-full h-full flex flex-col justify-center items-center gap-4">
+        <Loader2 className="w-32 h-32 animate-spin stroke-blue-300" />
+        <p className="text-xl font-semibold text-gray-600">
+          Loading budgets...
+        </p>
+      </div>
+    );
 
   if (budgets.length === 0)
     return (
