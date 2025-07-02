@@ -23,8 +23,8 @@ export type BudgetItem = {
     Total: number;
     [key: string]: string | number;
   };
-  export interface RouteContext {
+  /*export interface RouteContext {
     params: {
       budgetID: string;
     };
-  }
+  }*/

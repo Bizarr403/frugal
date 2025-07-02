@@ -1,4 +1,3 @@
-import { RouteContext } from "@/type";
 import { PrismaClient} from "@prisma/client"; // update with your prisma location
 import { NextResponse, NextRequest } from "next/server";
 const prisma = new PrismaClient()
