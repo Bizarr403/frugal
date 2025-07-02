@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient} from "@prisma/client"; // adjust this path if needed
 const prisma = new PrismaClient();
 
-export async function GET(req: NextRequest, {params}:{params:{userID:string}}) {
+export async function GET(req: NextRequest, params) {
+  const userID = params.userID
   try {
 
     if (!params.userID) {
@@ -12,7 +13,7 @@ export async function GET(req: NextRequest, {params}:{params:{userID:string}}) {
     const userBudget = await prisma.budget.findMany({
       where: {
         user: {
-          kindeId: params.userID,
+          kindeId: userID,
         },
       },
       include: {
