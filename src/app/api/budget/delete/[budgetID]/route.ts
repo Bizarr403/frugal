@@ -3,9 +3,9 @@ import { NextResponse, NextRequest } from "next/server";
 const prisma = new PrismaClient()
 
 export async function DELETE(
-  req: NextRequest, context: { params: { budgetID: string } }
+  req: NextRequest, slug
   ) {
-    const { budgetID } = context.params;
+    const { budgetID } = slug.params;
     try {
     const deleted = await prisma.budget.delete({
       where: {
