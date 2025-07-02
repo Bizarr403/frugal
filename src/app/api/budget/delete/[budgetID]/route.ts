@@ -1,11 +1,11 @@
 import { PrismaClient} from "@prisma/client"; // update with your prisma location
-import { NextResponse, /*NextRequest*/ } from "next/server";
+import { NextRequest, NextResponse, /*NextRequest*/ } from "next/server";
 const prisma = new PrismaClient()
 
-export async function DELETE(
-  {params}:{params:{budgetID:string}}
+export async function DELETE(req:NextRequest,
+  params
   ) {
-    const budgetID  = params.budgetID;
+    const {budgetID}  = params.budgetID;
     try {
     const deleted = await prisma.budget.delete({
       where: {
