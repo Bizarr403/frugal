@@ -1,15 +1,15 @@
+"use client";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { ArrowRight, ChartNoAxesColumn } from "lucide-react";
 import {
   RegisterLink,
   LoginLink,
-} from "@kinde-oss/kinde-auth-nextjs/components";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+  useKindeAuth,
+} from "@kinde-oss/kinde-auth-nextjs";
 
-export default async function Nav() {
-  const { isAuthenticated } = getKindeServerSession();
-  const isUserAuthenticated = await isAuthenticated();
+export default function Nav() {
+  const { isAuthenticated } = useKindeAuth();
   return (
     <nav className=" bg-zinc-100 flex justify-center w-full h-fit p-2">
       <div className="bg-zinc-50 rounded-full h-fit p-2 flex items-center text-center md:justify-between w-3/4">
@@ -30,7 +30,7 @@ export default async function Nav() {
           <Button variant="secondary" size="sm">
             <LoginLink>Sign in</LoginLink>
           </Button>
-          {isUserAuthenticated ? (
+          {isAuthenticated ? (
             <Button
               className="flex items-center shadow-sm justify-center w-fit"
               size="sm"

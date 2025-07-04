@@ -1,5 +1,6 @@
 import { HeroChart } from "@/components/Charts/Charts";
 import { Button } from "@/components/ui/button";
+import Nav from "@/components/Navbar";
 import { ArrowRight, Globe2, ChartLine, Percent } from "lucide-react";
 import {
   Card,
