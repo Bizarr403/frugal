@@ -26,6 +26,7 @@ export const GET = handleAuth({
     });
 
     // Redirect to dashboard after success
+
     return NextResponse.redirect("http://localhost:3000/dashboard");
   },
 });
