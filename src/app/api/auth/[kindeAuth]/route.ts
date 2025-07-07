@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
 export const GET = handleAuth({
-  async callback(req) {
+  async callback() {
     const {getUser}  = getKindeServerSession();
     const user = await getUser()
 
