@@ -3,7 +3,7 @@ import { PrismaClient} from "@prisma/client"; // adjust this path if needed
 const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest, params) {
-  const userID = params.userID
+  const userID:string = params.userID
   try {
 
     if (!params.userID) {
