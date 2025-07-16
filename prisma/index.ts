@@ -14,7 +14,7 @@ export async function addBudgetsToDB(budgets: BudgetMonth[], userID:string|undef
           total: b.total,
           user: {
             connect: {
-              kindeId: userID, // or use `id` or `email` if you store those instead
+              userId: userID, // or use `id` or `email` if you store those instead
             },
           },budgetItems: {
             create: b.budgetItems.map((item: any) => ({
@@ -42,7 +42,7 @@ export async function addBudgetsToDB(budgets: BudgetMonth[], userID:string|undef
 export async function filterBudgets(userID:string|undefined){
   try{
    const userBudget =  await prisma.budget.findMany({
-      where:{user:{kindeId:userID}}
+      where:{user:{userId:userID}}
     })
     return userBudget
 

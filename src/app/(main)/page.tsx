@@ -1,4 +1,8 @@
-import { HeroChart } from "@/components/Charts/Charts";
+import {
+  ConversionChart,
+  HeroChart,
+  MainChart,
+} from "@/components/Charts/Charts";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Globe2, ChartLine, Percent } from "lucide-react";
 import {
@@ -68,6 +72,11 @@ export default function Home() {
             </CardDescription>
           </Card>
         </div>
+      </article>
+      <article>
+        <h1 className="text-4xl text-center mb-4 text-gray-800">Try It Out</h1>
+
+        <ConversionChart />
       </article>
     </div>
   );

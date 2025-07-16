@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
           total: b.total,
           user: {
             connect: {
-              kindeId: userId, // or use `id` or `email` if you store those instead
+              userId: userId, // or use `id` or `email` if you store those instead
             },
           },budgetItems: {
             create: b.budgetItems.map((item: BudgetItem) => ({

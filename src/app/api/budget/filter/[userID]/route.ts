@@ -13,7 +13,7 @@ export async function GET(req: NextRequest, params) {
     const userBudget = await prisma.budget.findMany({
       where: {
         user: {
-          kindeId: userID,
+          userId: userID,
         },
       },
       include: {

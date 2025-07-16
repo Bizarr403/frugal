@@ -20,11 +20,13 @@ import {
   Label,
   CardFooter,
 } from "@/components/Charts/ChartBarrel";
+import { useKindeAuth } from "@kinde-oss/kinde-auth-nextjs";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { Trash2, Loader2 } from "lucide-react";
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { BudgetItem, BudgetMonth, ChartDataEntry, entry } from "@/type";
 const chartConfig = {
   total: { label: "Total", color: "black" },
@@ -71,6 +73,304 @@ export function HeroChart() {
   );
 }
 
+export function ConversionChart() {
+  const auth = useKindeAuth();
+  const router = useRouter();
+
+  const [budget, setBudget] = useState([
+    {
+      month: "",
+      total: 0,
+      budgetItems: [
+        {
+          name: "Food",
+          color: "#000000",
+          amount: 0,
+        },
+      ],
+    },
+  ]);
+  const dataByMonth = budget.map((monthBudget) => {
+    const monthName = new Date(monthBudget.month).toLocaleString("default", {
+      month: "long",
+      year: "2-digit",
+    });
+
+    const entry: entry = {
+      month: monthName,
+      total: monthBudget.total,
+    };
+
+    monthBudget.budgetItems.forEach((cat: BudgetItem) => {
+      entry[cat.name] = cat.amount;
+    });
+
+    return entry;
+  });
+
+  const allCategories = Array.from(
+    new Set(
+      budget.flatMap((monthBudget) =>
+        monthBudget.budgetItems.map((cat) => cat.name)
+      )
+    )
+  );
+  const chartConfig = budget
+    .flatMap((monthBudget) => monthBudget.budgetItems)
+    .reduce((config, item) => {
+      if (!config[item.name]) {
+        config[item.name] = {
+          label: item.name,
+          color: item.color,
+        };
+      }
+      return config;
+    }, {} as Record<string, { label: string; color: string }>);
+
+  return (
+    <div className="grid md:grid-cols-4 w-full h-auto gap-4 p-2 md:p-4 place-items-center ">
+      <Card className="bg-zinc-200/10 backdrop-blur-md shadow-lg col-span-2  place-items-center h-fit w-fit p-1">
+        <CardHeader className="flex justify-center items-center ">
+          <CardTitle className="text-2xl text-center text-nowrap font-semibold text-gray-800">
+            SET YOUR BUDGET
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="grid p-4 gap-2 max-h-[400px] overflow-y-auto">
+          <div className="w-full   p-4">
+            {budget.map((item, bIndex) => (
+              <div
+                key={bIndex}
+                className="grid  h-fit mb-8 p-4 border-2  max-h-[400px] overflow-y-auto border-solid rounded-sm"
+              >
+                <div className="grid grid-rows-3 gap-2 w-full">
+                  <h1 className="text-center text-zinc-600 font-semibold">
+                    {new Date(item.month).toLocaleString("default", {
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </h1>
+                  <div className="grid gap-2 ">
+                    <div className="flex justify-evenly items-center gap-2 ">
+                      <Label>Income</Label>
+                      <Input
+                        type="number"
+                        value={item.total}
+                        onChange={(e) => {
+                          const updatedBudget = [...budget];
+                          updatedBudget[bIndex].total = Number(e.target.value);
+                          setBudget(updatedBudget);
+                        }}
+                      />
+                    </div>
+                    <div className="flex justify-evenly items-center gap-2 ">
+                      <Label>Month</Label>
+                      <Input
+                        type="month"
+                        value={item.month}
+                        onChange={(e) => {
+                          const updatedBudget = [...budget];
+                          updatedBudget[bIndex].month = e.target.value;
+                          setBudget(updatedBudget);
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                {item.budgetItems.map((cat, cIndex) => (
+                  <div
+                    key={cIndex}
+                    className="mb-2 overflow-y-auto p-4 border-2 border-solid rounded-sm"
+                  >
+                    <div className="flex justify-center items-center gap-2">
+                      <Label className="text-nowrap">
+                        Category {cIndex + 1}
+                      </Label>
+                      <Input
+                        type="text"
+                        value={cat.name}
+                        placeholder="Enter a category e.g. Utilities"
+                        onChange={(e) => {
+                          const updatedBudget = [...budget];
+                          updatedBudget[bIndex].budgetItems[cIndex].name =
+                            e.target.value;
+
+                          setBudget(updatedBudget);
+                        }}
+                        className="w-full"
+                      />
+                      <Input
+                        type="color"
+                        value={cat.color}
+                        onChange={(e) => {
+                          const updatedBudget = [...budget];
+                          updatedBudget[bIndex].budgetItems[cIndex].color =
+                            e.target.value;
+                          setBudget(updatedBudget);
+                        }}
+                        className="w-10 p-1"
+                      />
+                    </div>
+                    <div className="grid grid-rows-2 ">
+                      <div className="flex justify-evenly items-center gap-2 ">
+                        <Label>Amount</Label>
+
+                        <Input
+                          value={cat.amount}
+                          onChange={(val) => {
+                            const updatedBudget = [...budget];
+                            updatedBudget[bIndex].budgetItems[cIndex].amount =
+                              Number(val.target.value);
+                            if (
+                              isNaN(
+                                updatedBudget[bIndex].budgetItems[cIndex].amount
+                              )
+                            ) {
+                              updatedBudget[bIndex].budgetItems[
+                                cIndex
+                              ].amount = 0;
+                            } else {
+                              setBudget(updatedBudget);
+                            }
+                          }}
+                          className="w-full"
+                        />
+                      </div>
+                      <div className="text-sm flex justify-center items-center gap-2 p-4 w-full text-gray-700">
+                        <p>
+                          {cat.amount > 0
+                            ? `${((cat.amount / item.total) * 100).toFixed(2)}%`
+                            : "0%"}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-evenly items-center">
+                      <Button
+                        variant="default"
+                        className="w-fit"
+                        onClick={() => {
+                          const updatedBudget = [...budget];
+                          updatedBudget[bIndex].budgetItems.push({
+                            name: "",
+                            color: "#000000",
+                            amount: 0,
+                          });
+                          setBudget(updatedBudget);
+                        }}
+                      >
+                        <Plus />
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        className="w-10"
+                        onClick={() => {
+                          const updatedBudget = [...budget];
+                          updatedBudget[bIndex].budgetItems = updatedBudget[
+                            bIndex
+                          ].budgetItems.filter((_, i) => i !== bIndex);
+                          setBudget(updatedBudget);
+                        }}
+                        disabled={
+                          budget[bIndex].budgetItems.length <= 1 ? true : false
+                        }
+                      >
+                        <X />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                <div className="flex justify-evenly items-center">
+                  <Button
+                    variant="secondary"
+                    className="w-fit  p-1"
+                    onClick={() => {
+                      const updatedBudget = [...budget];
+                      updatedBudget.push({
+                        month: "",
+                        total: 0,
+                        budgetItems: [
+                          { name: "", color: "#0000000", amount: 0 },
+                        ],
+                      });
+                      setBudget(updatedBudget);
+                    }}
+                  >
+                    New Month
+                    <Plus />
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    className="w-10"
+                    onClick={() => {
+                      const updatedBudget = budget.filter(
+                        (_, i) => i !== bIndex
+                      );
+                      setBudget(updatedBudget);
+                    }}
+                    disabled={budget.length <= 1 ? true : false}
+                  >
+                    <X />
+                  </Button>
+                </div>
+              </div>
+            ))}
+            <CardFooter className="w-full justify-center">
+              <Button
+                onClick={async () => {
+                  if (auth) {
+                    router.push("/dashboard");
+                  } else {
+                    router.push("/api/auth/login");
+                  }
+                }}
+                className="bg-green-400"
+              >
+                Set Budget
+              </Button>
+            </CardFooter>
+          </div>
+        </CardContent>
+      </Card>
+      <ChartContainer
+        config={chartConfig}
+        className="w-full col-span-2 justify-center max-h-[500px]"
+      >
+        <BarChart accessibilityLayer data={dataByMonth}>
+          <XAxis dataKey="month" />
+          <YAxis />
+          <ChartTooltip content={<ChartTooltipContent />} />
+          <Legend />
+          {allCategories.map((catName, index) => {
+            const color =
+              budget
+                .flatMap((b) => b.budgetItems)
+                .find((c) => c.name === catName)?.color || "#8884d8";
+
+            return (
+              <Bar
+                key={index}
+                dataKey={catName}
+                fill={color}
+                width={12}
+                radius={4}
+              />
+            );
+          })}
+
+          {/* Savings Bar */}
+          <Bar
+            dataKey="Savings"
+            fill="#00FF20" // bright green
+            radius={4}
+          />
+
+          {/* Total Bar */}
+          <Bar dataKey="Total" fill="#99D5C9" radius={4} />
+        </BarChart>
+      </ChartContainer>
+    </div>
+  );
+}
 export function MainChart({ userID }: { userID: string | undefined }) {
   const [budget, setBudget] = useState([
     {
